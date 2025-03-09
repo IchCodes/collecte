@@ -7,19 +7,23 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            axios.get("/api/users/me", { headers: { Authorization: `Bearer ${token}` } })
-                .then(res => setUser(res.data))
-                .catch(() => logout());
+        // Vérifier si un utilisateur est déjà stocké dans localStorage
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
         }
     }, []);
 
     const login = async (email, password) => {
-        const res = await axios.post("/api/auth/login", { email, password });
-        localStorage.setItem("token", res.data.token);
-        setUser(res.data.user);
+        const res = await axios.get(`http://localhost:3001/users?email=${email}&mot_de_passe=${password}`);
+        if (res.data.length > 0) {
+            localStorage.setItem("token", "mock-token"); // Simule un token
+            setUser(res.data[0]);
+        } else {
+            throw new Error("Utilisateur introuvable");
+        }
     };
+    
 
     const logout = () => {
         localStorage.removeItem("token");

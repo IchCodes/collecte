@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import { 
     Container, 
@@ -11,11 +12,18 @@ import {
 
 const Login = () => {
     const { login } = useContext(AuthContext);
+    const navigate = useNavigate(); // Ajoutez ceci
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const handleSubmit = async (e) => {
-        // ... existing code ...
+        e.preventDefault();
+        try {
+            await login(email, password);
+            navigate("/don");
+        } catch (err) {
+            alert("Erreur de connexion");
+        }
     };
 
     return (
