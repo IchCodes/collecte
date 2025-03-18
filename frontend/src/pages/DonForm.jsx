@@ -21,9 +21,11 @@ import {
   createDonateur,
   getAllDonateurs,
 } from "../utils/GlobalApis";
+import { useNavigate } from "react-router-dom";
 
 const DonForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
   const [montant, setMontant] = useState("");
   const [typeDon, setTypeDon] = useState("Unique");
   const [modePaiement, setModePaiement] = useState("CB");
@@ -39,8 +41,6 @@ const DonForm = () => {
   const [openDialog, setOpenDialog] = useState(false); // État du pop-up de création
 
   const API_BASE_URL = "/api"; // Utilisation du proxy
-
-  console.log(user);
 
   // Charger les donateurs depuis l’API
   useEffect(() => {
@@ -113,6 +113,7 @@ const DonForm = () => {
       setSelectedDonateur(null);
       setNewDonateur({ nom: "", prenom: "", email: "", telephone: "" });
       setOpenDialog(false);
+      navigate(0);
     } catch (err) {
       alert("Erreur lors de l'enregistrement");
       console.error(err);
@@ -231,7 +232,7 @@ const DonForm = () => {
             onClick={() => {
               if (newDonateur.nom && newDonateur.prenom) {
                 const newEntry = { ...newDonateur };
-            
+
                 setSelectedDonateur(newEntry);
                 setDonateurs((prev) => [...prev, newEntry]); // Ajouter à la liste des donateurs visibles
                 setInputValue(`${newEntry.nom} ${newEntry.prenom}`); // Mettre immédiatement à jour l'affichage
@@ -240,7 +241,6 @@ const DonForm = () => {
                 alert("Veuillez remplir au moins le nom et le prénom");
               }
             }}
-            
             variant="contained"
             color="primary"
           >
