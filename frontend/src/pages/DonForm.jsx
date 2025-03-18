@@ -58,6 +58,8 @@ const DonForm = () => {
   // Vérifier si le donateur entré est dans la liste
   const handleInputChange = (event, value) => {
     setInputValue(value); // Mettre à jour ce qui s'affiche immédiatement
+
+    
     const existingDonateur = donateurs.find(
       (d) => `${d.nom} ${d.prenom}`.toLowerCase() === value.toLowerCase()
     );
@@ -70,6 +72,8 @@ const DonForm = () => {
         email: existingDonateur.email,
         telephone: existingDonateur.telephone,
       });
+      setEmail(existingDonateur.email);
+      setTelephone(existingDonateur.telephone);
       setOpenDialog(false);
     } else {
       setSelectedDonateur(null);
@@ -117,7 +121,8 @@ const DonForm = () => {
           nom: donateurInfo.nom,
           prenom: donateurInfo.prenom,
           email: email.trim() !== "" ? email : donateurInfo.email,
-          telephone: telephone.trim() !== "" ? telephone : donateurInfo.telephone,
+          telephone:
+            telephone.trim() !== "" ? telephone : donateurInfo.telephone,
         },
       });
 
