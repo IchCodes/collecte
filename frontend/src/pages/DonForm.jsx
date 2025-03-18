@@ -26,8 +26,10 @@ import { useNavigate } from "react-router-dom";
 const DonForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [telephone, setTelephone] = useState("");
   const [montant, setMontant] = useState("");
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState("");
   const [typeDon, setTypeDon] = useState("Unique");
   const [modePaiement, setModePaiement] = useState("CB");
   const [donateurs, setDonateurs] = useState([]); // Liste des donateurs récupérés depuis l'API
@@ -47,6 +49,11 @@ const DonForm = () => {
   useEffect(() => {
     getAllDonateurs().then((data) => setDonateurs(data));
   }, []);
+
+  const isContactValid = () => {
+    if (typeDon === "Unique") return true;
+    return email.trim() !== "" || telephone.trim() !== "";
+  };
 
   // Vérifier si le donateur entré est dans la liste
   const handleInputChange = (event, value) => {
@@ -76,6 +83,14 @@ const DonForm = () => {
   // Gestion de la soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isContactValid()) {
+      alert(
+        "Pour une promesse ou un don récurrent, veuillez fournir au moins un email ou un numéro de téléphone."
+      );
+      return;
+    }
+
     try {
       let donateurId = selectedDonateur ? selectedDonateur.id : null;
       let donateurInfo = null;
@@ -101,8 +116,8 @@ const DonForm = () => {
         donateur: {
           nom: donateurInfo.nom,
           prenom: donateurInfo.prenom,
-          email: donateurInfo.email,
-          telephone: donateurInfo.telephone,
+          email: email.trim() !== "" ? email : donateurInfo.email,
+          telephone: telephone.trim() !== "" ? telephone : donateurInfo.telephone,
         },
       });
 
@@ -182,6 +197,26 @@ const DonForm = () => {
                 <MenuItem value="VIREMENT">Virement</MenuItem>
               </Select>
             </FormControl>
+            {(typeDon === "Promesse" || typeDon === "Récurrent") && (
+              <>
+                <TextField
+                  type="email"
+                  label="Email *"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  fullWidth
+                  helperText="Email ou téléphone obligatoire"
+                />
+                <TextField
+                  type="tel"
+                  label="Téléphone *"
+                  value={telephone}
+                  onChange={(e) => setTelephone(e.target.value)}
+                  fullWidth
+                  helperText="Email ou téléphone obligatoire"
+                />
+              </>
+            )}
             <Button
               type="submit"
               variant="contained"
