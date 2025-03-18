@@ -221,7 +221,14 @@ const DonForm = () => {
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)}>Annuler</Button>
           <Button
-            onClick={() => setOpenDialog(false)}
+            onClick={() => {
+              if (newDonateur.nom && newDonateur.prenom) {
+                setSelectedDonateur(newDonateur);
+                setOpenDialog(false);
+              } else {
+                alert("Veuillez remplir au moins le nom et le prénom");
+              }
+            }}
             variant="contained"
             color="primary"
           >
