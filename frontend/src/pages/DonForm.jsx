@@ -54,12 +54,17 @@ const DonForm = () => {
 
     if (existingDonateur) {
       setSelectedDonateur(existingDonateur);
+      setNewDonateur({
+        nom: existingDonateur.nom,
+        prenom: existingDonateur.prenom,
+        email: existingDonateur.email,
+        telephone: existingDonateur.telephone,
+      });
       setOpenDialog(false);
     } else {
-      setSelectedDonateur(null);
-      setNewDonateur({ nom: value, prenom: "", telephone: "" });
+      setSelectedDonateur({ nom: value, prenom: "", email: "", telephone: "" });
+      setNewDonateur({ nom: value, prenom: "", email: "", telephone: "" });
       if (value.trim().length > 2) {
-        // Ne pas ouvrir la popup sur une seule lettre
         setOpenDialog(true);
       }
     }
@@ -223,7 +228,8 @@ const DonForm = () => {
           <Button
             onClick={() => {
               if (newDonateur.nom && newDonateur.prenom) {
-                setSelectedDonateur(newDonateur);
+                setSelectedDonateur({ ...newDonateur });
+                setDonateurs((prev) => [...prev, newDonateur]); // Ajouter à la liste des donateurs visibles
                 setOpenDialog(false);
               } else {
                 alert("Veuillez remplir au moins le nom et le prénom");
