@@ -29,6 +29,7 @@ const DonForm = () => {
   const [modePaiement, setModePaiement] = useState("CB");
   const [donateurs, setDonateurs] = useState([]); // Liste des donateurs récupérés depuis l'API
   const [selectedDonateur, setSelectedDonateur] = useState(null); // Donateur sélectionné
+  const [inputValue, setInputValue] = useState(""); // Gère la valeur affichée dans l'Autocomplete
   const [newDonateur, setNewDonateur] = useState({
     nom: "",
     prenom: "",
@@ -48,6 +49,7 @@ const DonForm = () => {
 
   // Vérifier si le donateur entré est dans la liste
   const handleInputChange = (event, value) => {
+    setInputValue(value); // Mettre à jour ce qui s'affiche immédiatement
     const existingDonateur = donateurs.find(
       (d) => `${d.nom} ${d.prenom}`.toLowerCase() === value.toLowerCase()
     );
@@ -62,7 +64,7 @@ const DonForm = () => {
       });
       setOpenDialog(false);
     } else {
-      setSelectedDonateur({ nom: value, prenom: "", email: "", telephone: "" });
+      setSelectedDonateur(null);
       setNewDonateur({ nom: value, prenom: "", email: "", telephone: "" });
       if (value.trim().length > 2) {
         setOpenDialog(true);
@@ -131,12 +133,12 @@ const DonForm = () => {
               getOptionLabel={(option) => `${option.nom} ${option.prenom}`}
               onChange={(event, newValue) => setSelectedDonateur(newValue)}
               freeSolo
+              inputValue={inputValue} // Forcer l'affichage immédiat
+              onInputChange={handleInputChange}
               renderInput={(params) => (
                 <TextField {...params} label="Nom du Donateur" />
               )}
-              onInputChange={handleInputChange} // Vérifie l'entrée utilisateur
             />
-
             <TextField
               type="number"
               label="Montant"
@@ -228,13 +230,17 @@ const DonForm = () => {
           <Button
             onClick={() => {
               if (newDonateur.nom && newDonateur.prenom) {
-                setSelectedDonateur({ ...newDonateur });
-                setDonateurs((prev) => [...prev, newDonateur]); // Ajouter à la liste des donateurs visibles
+                const newEntry = { ...newDonateur };
+            
+                setSelectedDonateur(newEntry);
+                setDonateurs((prev) => [...prev, newEntry]); // Ajouter à la liste des donateurs visibles
+                setInputValue(`${newEntry.nom} ${newEntry.prenom}`); // Mettre immédiatement à jour l'affichage
                 setOpenDialog(false);
               } else {
                 alert("Veuillez remplir au moins le nom et le prénom");
               }
             }}
+            
             variant="contained"
             color="primary"
           >
