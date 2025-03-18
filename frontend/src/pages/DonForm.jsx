@@ -27,6 +27,7 @@ const DonForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const [montant, setMontant] = useState("");
+  const [message, setMessage] = useState("")
   const [typeDon, setTypeDon] = useState("Unique");
   const [modePaiement, setModePaiement] = useState("CB");
   const [donateurs, setDonateurs] = useState([]); // Liste des donateurs récupérés depuis l'API
@@ -94,7 +95,7 @@ const DonForm = () => {
         montant: parseFloat(montant),
         typeDon,
         modePaiement,
-        message: "",
+        message: message,
         donateurId: donateurId,
         userId: user.id,
         donateur: {
@@ -145,6 +146,14 @@ const DonForm = () => {
               label="Montant"
               value={montant}
               onChange={(e) => setMontant(e.target.value)}
+              required
+              fullWidth
+            />
+            <TextField
+              type="text"
+              label="Message / Invocations"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               required
               fullWidth
             />

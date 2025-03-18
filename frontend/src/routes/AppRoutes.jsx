@@ -8,6 +8,7 @@ import Admin from "../pages/Admin";
 const AppRoutes = () => {
     return (
         <Routes>
+            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/don" element={<PrivateRoute><DonForm /></PrivateRoute>} />
             <Route path="/animateur" element={<PrivateRoute><Animateur /></PrivateRoute>} />
