@@ -12,23 +12,25 @@ import {
   ListItemText
 } from "@mui/material";
 
+// Palette de couleurs
+const primaryColor = "#8AAAE5"; // Bleu doux
+const accentColor = "#F4A261"; // Orange pastel
+const successColor = "#A3D9A5"; // Vert clair
+const messageColor = "#B388EB"; // Violet doux
+
 const Animateur = () => {
   const [dons, setDons] = useState([]);  // Liste complète des dons
   const [currentIndex, setCurrentIndex] = useState(0); // Index du don affiché
   const [loading, setLoading] = useState(false);
 
-  // Fonction pour récupérer les dons et les trier
+  // Fonction pour récupérer et trier les dons
   const fetchDons = async () => {
     setLoading(true);
     try {
       const data = await getAllDons();
-
-      console.log("Dons récupérés:", data);
   
       // Trier les dons du PLUS ANCIEN au PLUS RÉCENT
       const sortedDons = data.sort((a, b) => new Date(a.dateHeureAffichage) - new Date(b.dateHeureAffichage));
-
-      console.log("Dons triés:", sortedDons);
       
       setDons(sortedDons);
     } catch (error) {
@@ -36,15 +38,11 @@ const Animateur = () => {
     }
     setLoading(false);
   };
-  
 
-  // Chargement initial et rafraîchissement automatique
+  // Chargement initial + rafraîchissement auto toutes les 10s
   useEffect(() => {
     fetchDons();
-    const interval = setInterval(() => {
-      fetchDons();
-    }, 10000); // Rafraîchissement toutes les 10 secondes
-
+    const interval = setInterval(() => fetchDons(), 10000);
     return () => clearInterval(interval);
   }, []);
 
@@ -60,7 +58,7 @@ const Animateur = () => {
 
   return (
     <Container maxWidth="md" sx={{ textAlign: "center", mt: 5 }}>
-      <Typography variant="h4" sx={{ mb: 3 }}>
+      <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold", color: primaryColor }}>
         🔊 Annonce des Dons
       </Typography>
 
@@ -68,15 +66,24 @@ const Animateur = () => {
       {loading ? (
         <CircularProgress />
       ) : currentDon ? (
-        <Paper elevation={3} sx={{ p: 4, mb: 3 }}>
-          <Typography variant="h5">
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4,
+            mb: 3,
+            borderRadius: "12px",
+            backgroundColor: "#FFF5E1", // Fond doux
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Typography variant="h5" sx={{ color: accentColor }}>
             🎁 Don de <b>{currentDon.donateur ? `${currentDon.donateur.nom} ${currentDon.donateur.prenom}` : "Anonyme"}</b>
           </Typography>
-          <Typography variant="h3" color="primary" sx={{ mt: 2, fontWeight: "bold" }}>
+          <Typography variant="h3" sx={{ mt: 2, fontWeight: "bold", color: successColor }}>
             {currentDon.montant} €
           </Typography>
           {currentDon.message && (
-            <Typography variant="h6" sx={{ mt: 2, fontStyle: "italic", color: "gray" }}>
+            <Typography variant="h6" sx={{ mt: 2, fontStyle: "italic", color: messageColor }}>
               ✨ "{currentDon.message}"
             </Typography>
           )}
@@ -88,7 +95,15 @@ const Animateur = () => {
       {/* Bouton pour passer au don suivant */}
       <Button
         variant="contained"
-        color="secondary"
+        sx={{
+          backgroundColor: primaryColor,
+          color: "white",
+          fontWeight: "bold",
+          px: 3,
+          py: 1.5,
+          borderRadius: "8px",
+          '&:hover': { backgroundColor: "#6C93D6" },
+        }}
         onClick={handleNextDon}
         disabled={currentIndex >= dons.length - 1}
       >
@@ -98,13 +113,21 @@ const Animateur = () => {
       {/* Aperçu des prochains dons */}
       {dons.length > 1 && (
         <Box sx={{ mt: 4 }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>📢 Prochains Dons :</Typography>
-          <List>
+          <Typography variant="h6" sx={{ mb: 2, color: accentColor }}>
+            📢 Prochains Dons :
+          </Typography>
+          <List sx={{ backgroundColor: "#F8F9FA", borderRadius: "8px", p: 2 }}>
             {dons.slice(currentIndex + 1, currentIndex + 4).map((don, index) => (
               <ListItem key={don.id} divider>
                 <ListItemText
-                  primary={`${don.donateur ? don.donateur.nom : "Anonyme"} - ${don.montant} €`}
-                  secondary={don.message ? `"${don.message}"` : ""}
+                  primary={
+                    <Typography sx={{ fontWeight: "bold", color: primaryColor }}>
+                      {don.donateur ? don.donateur.nom : "Anonyme"} - {don.montant} €
+                    </Typography>
+                  }
+                  secondary={
+                    don.message ? <Typography sx={{ color: messageColor }}> "{don.message}" </Typography> : ""
+                  }
                 />
               </ListItem>
             ))}

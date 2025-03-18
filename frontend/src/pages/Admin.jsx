@@ -20,51 +20,37 @@ const Admin = () => {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Fonction pour récupérer les dons
   const fetchDons = async () => {
     setLoading(true);
     setRefreshing(true);
-
     try {
       const data = await getAllDons();
-
-      // Trier les dons par date du plus récent au plus ancien
-      const sortedDons = data.sort(
-        (a, b) => new Date(b.dateHeureAffichage) - new Date(a.dateHeureAffichage)
-      );
-
-      setDons(sortedDons);
+      setDons(data.sort((a, b) => new Date(b.dateHeureAffichage) - new Date(a.dateHeureAffichage)));
     } catch (error) {
       console.error("Erreur lors de la récupération des dons:", error);
     }
-
     setTimeout(() => {
       setLoading(false);
       setRefreshing(false);
     }, 500);
   };
 
-  // Chargement initial et mise à jour automatique toutes les 10s
   useEffect(() => {
     fetchDons();
-    const interval = setInterval(() => {
-      fetchDons();
-    }, 10000); // Rafraîchissement auto toutes les 10s
-
-    return () => clearInterval(interval); // Nettoyage du timer
+    const interval = setInterval(() => fetchDons(), 10000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" sx={{ my: 3, textAlign: "center" }}>
+      <Typography variant="h4" sx={{ my: 3, textAlign: "center", color: "#333" }}>
         Liste des Dons Collectés
       </Typography>
 
-      {/* Bouton de rafraîchissement */}
       <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
         <Button
           variant="contained"
-          color="primary"
+          sx={{ backgroundColor: "#A3D9A5", color: "white", '&:hover': { backgroundColor: "#8DC58F" } }}
           onClick={fetchDons}
           disabled={refreshing}
         >
@@ -72,57 +58,26 @@ const Admin = () => {
         </Button>
       </Box>
 
-      {/* Indicateur de rafraîchissement automatique */}
-      {/* Indicateur de rafraîchissement automatique */}
-      {loading && (
-        <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
-          <CircularProgress />
-        </Box>
-      )}
+      {loading && <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}><CircularProgress /></Box>}
 
-      {/* Tableau des dons */}
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ borderRadius: "12px", overflow: "hidden", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }}>
         <Table>
-          <TableHead>
+          <TableHead sx={{ backgroundColor: "#8AAAE5" }}>
             <TableRow>
-              <TableCell>
-                <b>ID</b>
-              </TableCell>
-              <TableCell>
-                <b>Donateur</b>
-              </TableCell>
-              <TableCell>
-                <b>Montant</b>
-              </TableCell>
-              <TableCell>
-                <b>Type</b>
-              </TableCell>
-              <TableCell>
-                <b>Mode de paiement</b>
-              </TableCell>
-              <TableCell>
-                <b>Date</b>
-              </TableCell>
-              <TableCell>
-                <b>Statut</b>
-              </TableCell>
+              {["ID", "Donateur", "Montant", "Type", "Paiement", "Date", "Statut"].map((head) => (
+                <TableCell key={head} sx={{ color: "white", fontWeight: "bold" }}>{head}</TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
             {dons.map((don) => (
               <TableRow key={don.id}>
                 <TableCell>{don.id}</TableCell>
-                <TableCell>
-                  {don.donateur
-                    ? `${don.donateur.nom} ${don.donateur.prenom}`
-                    : "Anonyme"}
-                </TableCell>
-                <TableCell>{don.montant} €</TableCell>
+                <TableCell>{don.donateur ? `${don.donateur.nom} ${don.donateur.prenom}` : "Anonyme"}</TableCell>
+                <TableCell sx={{ color: "#A3D9A5", fontWeight: "bold" }}>{don.montant} €</TableCell>
                 <TableCell>{don.typeDon}</TableCell>
                 <TableCell>{don.modePaiement}</TableCell>
-                <TableCell>
-                  {new Date(don.dateHeureAffichage).toLocaleString()}
-                </TableCell>
+                <TableCell>{new Date(don.dateHeureAffichage).toLocaleString()}</TableCell>
                 <TableCell>{don.statut}</TableCell>
               </TableRow>
             ))}

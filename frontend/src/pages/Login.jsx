@@ -7,15 +7,26 @@ import {
     TextField, 
     Button, 
     Typography, 
-    Paper 
+    Paper, 
+    IconButton, 
+    InputAdornment 
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+
+// Palette de couleurs
+const primaryColor = "#A3D9A5"; // Vert clair
+const accentColor = "#8AAAE5"; // Bleu pastel
+const errorColor = "#FF6B6B"; // Rouge doux
 
 const Login = () => {
     const { login, user } = useContext(AuthContext);
-    const navigate = useNavigate(); // Ajoutez ceci
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState("");
 
+    // Redirection si déjà connecté
     if (user) {
         switch (user.role) {
             case "COLLECTEUR":
@@ -34,10 +45,14 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!email) {
+            setError("Veuillez remplir tous les champs.");
+            return;
+        }
         try {
             await login(email, navigate);
         } catch (err) {
-            alert("Erreur de connexion");
+            setError("Erreur de connexion, vérifiez vos identifiants.");
         }
     };
 
@@ -49,10 +64,33 @@ const Login = () => {
                 flexDirection: 'column',
                 alignItems: 'center'
             }}>
-                <Paper elevation={3} sx={{ p: 4, width: '100%' }}>
-                    <Typography component="h1" variant="h5" align="center" gutterBottom>
-                        Connexion
+                <Paper 
+                    elevation={3} 
+                    sx={{ 
+                        p: 4, 
+                        width: '100%', 
+                        borderRadius: "12px",
+                        backgroundColor: "#FFF5E1", // Fond doux
+                        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)"
+                    }}
+                >
+                    <Typography 
+                        component="h1" 
+                        variant="h5" 
+                        align="center" 
+                        gutterBottom
+                        sx={{ color: primaryColor, fontWeight: "bold" }}
+                    >
+                        🔐 Connexion
                     </Typography>
+
+                    {/* Affichage des erreurs */}
+                    {error && (
+                        <Typography sx={{ color: errorColor, textAlign: "center", mb: 2 }}>
+                            {error}
+                        </Typography>
+                    )}
+
                     <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"
@@ -65,26 +103,27 @@ const Login = () => {
                             autoFocus
                             value={email}
                             onChange={e => setEmail(e.target.value)}
+                            sx={{
+                                "& label.Mui-focused": { color: accentColor },
+                                "& .MuiOutlinedInput-root": {
+                                    "&.Mui-focused fieldset": { borderColor: accentColor }
+                                }
+                            }}
                         />
-                        {/* <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Mot de passe"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                        /> */}
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{ 
+                                mt: 3, 
+                                mb: 2, 
+                                backgroundColor: primaryColor, 
+                                color: "white",
+                                fontWeight: "bold",
+                                '&:hover': { backgroundColor: "#8DC58F" }
+                            }}
                         >
-                            Se connecter
+                            🚀 Se connecter
                         </Button>
                     </Box>
                 </Paper>
