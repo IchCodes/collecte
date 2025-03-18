@@ -30,7 +30,7 @@ const Admin = () => {
 
       // Trier les dons par date du plus récent au plus ancien
       const sortedDons = data.sort(
-        (a, b) => new Date(b.date_heure) - new Date(a.date_heure)
+        (a, b) => new Date(b.dateHeureAffichage) - new Date(a.dateHeureAffichage)
       );
 
       setDons(sortedDons);
