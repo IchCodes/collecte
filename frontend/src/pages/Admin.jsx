@@ -22,20 +22,26 @@ const Admin = () => {
 
   // Fonction pour récupérer les dons
   const fetchDons = async () => {
-    setLoading(true); // Active le spinner avant la requête
-    setRefreshing(true); // Désactive le bouton "Rafraîchir maintenant"
+    setLoading(true);
+    setRefreshing(true);
 
     try {
       const data = await getAllDons();
-      setDons(data);
+
+      // Trier les dons par date du plus récent au plus ancien
+      const sortedDons = data.sort(
+        (a, b) => new Date(b.date_heure) - new Date(a.date_heure)
+      );
+
+      setDons(sortedDons);
     } catch (error) {
       console.error("Erreur lors de la récupération des dons:", error);
     }
 
     setTimeout(() => {
-      setLoading(false); // Désactive le spinner après un petit délai
+      setLoading(false);
       setRefreshing(false);
-    }, 500); // Petit délai pour l'animation
+    }, 500);
   };
 
   // Chargement initial et mise à jour automatique toutes les 10s
