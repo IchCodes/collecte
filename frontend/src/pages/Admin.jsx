@@ -22,14 +22,20 @@ const Admin = () => {
 
   // Fonction pour récupérer les dons
   const fetchDons = async () => {
-    setRefreshing(true); // Affichage du spinner de rafraîchissement
+    setLoading(true); // Active le spinner avant la requête
+    setRefreshing(true); // Désactive le bouton "Rafraîchir maintenant"
+
     try {
       const data = await getAllDons();
       setDons(data);
     } catch (error) {
       console.error("Erreur lors de la récupération des dons:", error);
     }
-    setRefreshing(false);
+
+    setTimeout(() => {
+      setLoading(false); // Désactive le spinner après un petit délai
+      setRefreshing(false);
+    }, 500); // Petit délai pour l'animation
   };
 
   // Chargement initial et mise à jour automatique toutes les 10s
@@ -61,7 +67,8 @@ const Admin = () => {
       </Box>
 
       {/* Indicateur de rafraîchissement automatique */}
-      {refreshing && (
+      {/* Indicateur de rafraîchissement automatique */}
+      {loading && (
         <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
           <CircularProgress />
         </Box>
@@ -72,24 +79,44 @@ const Admin = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell><b>ID</b></TableCell>
-              <TableCell><b>Donateur</b></TableCell>
-              <TableCell><b>Montant</b></TableCell>
-              <TableCell><b>Type</b></TableCell>
-              <TableCell><b>Mode de paiement</b></TableCell>
-              <TableCell><b>Date</b></TableCell>
-              <TableCell><b>Statut</b></TableCell>
+              <TableCell>
+                <b>ID</b>
+              </TableCell>
+              <TableCell>
+                <b>Donateur</b>
+              </TableCell>
+              <TableCell>
+                <b>Montant</b>
+              </TableCell>
+              <TableCell>
+                <b>Type</b>
+              </TableCell>
+              <TableCell>
+                <b>Mode de paiement</b>
+              </TableCell>
+              <TableCell>
+                <b>Date</b>
+              </TableCell>
+              <TableCell>
+                <b>Statut</b>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {dons.map((don) => (
               <TableRow key={don.id}>
                 <TableCell>{don.id}</TableCell>
-                <TableCell>{don.donateur ? `${don.donateur.nom} ${don.donateur.prenom}` : "Anonyme"}</TableCell>
+                <TableCell>
+                  {don.donateur
+                    ? `${don.donateur.nom} ${don.donateur.prenom}`
+                    : "Anonyme"}
+                </TableCell>
                 <TableCell>{don.montant} €</TableCell>
                 <TableCell>{don.typeDon}</TableCell>
                 <TableCell>{don.modePaiement}</TableCell>
-                <TableCell>{new Date(don.dateHeureAffichage).toLocaleString()}</TableCell>
+                <TableCell>
+                  {new Date(don.dateHeureAffichage).toLocaleString()}
+                </TableCell>
                 <TableCell>{don.statut}</TableCell>
               </TableRow>
             ))}
