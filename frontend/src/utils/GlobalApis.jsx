@@ -13,6 +13,19 @@ export async function getAllDonateurs() {
     }
 }
 
+export async function getAllDons() {
+    const url = `${import.meta.env.VITE_BASE_URl}/dons`;
+    const config = {headers: { "X-API-KEY": "bismillah" }};
+
+    try {
+        const res = await axios.get(url, config);
+        return res.data;
+    }
+    catch (error) {
+        console.error("Erreur de chargement des donateurs", error);
+    }
+}
+
 export async function createDonateur(donateur) {
     const url = `${import.meta.env.VITE_BASE_URl}/donateurs`;
     const config = {headers: { "X-API-KEY": "bismillah" }};
