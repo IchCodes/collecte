@@ -205,7 +205,7 @@ const DonForm = () => {
             fullWidth
             value={newDonateur.email}
             onChange={(e) =>
-              setNewDonateur({ ...newDonateur, prenom: e.target.value })
+              setNewDonateur({ ...newDonateur, email: e.target.value })
             }
             sx={{ mb: 2 }}
           />
