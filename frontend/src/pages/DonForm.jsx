@@ -12,6 +12,7 @@ import {
   Box,
   Autocomplete,
 } from "@mui/material";
+import { getAllDonateurs } from "../utils/GlobalApis";
 
 const DonForm = () => {
   const [montant, setMontant] = useState("");
@@ -19,14 +20,10 @@ const DonForm = () => {
   const [modePaiement, setModePaiement] = useState("CB");
   const [donateurs, setDonateurs] = useState([]); // Liste des donateurs récupérés depuis l'API
   const [selectedDonateur, setSelectedDonateur] = useState(null); // Donateur sélectionné
-  const token = localStorage.getItem("token");
 
   // Charger les donateurs depuis l’API
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/donateurs") // MOCK API
-      .then((res) => setDonateurs(res.data))
-      .catch((err) => console.error("Erreur de chargement des donateurs", err));
+    getAllDonateurs().then((data) => setDonateurs(data));
   }, []);
 
   const handleSubmit = async (e) => {
