@@ -11,16 +11,31 @@ import {
 } from "@mui/material";
 
 const Login = () => {
-    const { login } = useContext(AuthContext);
+    const { login, user } = useContext(AuthContext);
     const navigate = useNavigate(); // Ajoutez ceci
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    if (user) {
+        switch (user.role) {
+            case "COLLECTEUR":
+                navigate("/don");
+                break;
+            case "ANIMATEUR":
+                navigate("/animateur");
+                break;
+            case "ADMINISTRATEUR":
+                navigate("/admin");
+                break;
+            default:
+                alert("Rôle inconnu");
+        }
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await login(email, password);
-            navigate("/don");
+            await login(email, navigate);
         } catch (err) {
             alert("Erreur de connexion");
         }
@@ -51,7 +66,7 @@ const Login = () => {
                             value={email}
                             onChange={e => setEmail(e.target.value)}
                         />
-                        <TextField
+                        {/* <TextField
                             margin="normal"
                             required
                             fullWidth
@@ -62,7 +77,7 @@ const Login = () => {
                             autoComplete="current-password"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
-                        />
+                        /> */}
                         <Button
                             type="submit"
                             fullWidth
