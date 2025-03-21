@@ -54,7 +54,8 @@ const Header = () => {
       navItems.push(
         { label: "Tableau de bord", path: "/admin" },
         { label: "Collecte", path: "/don" },
-        { label: "Animation", path: "/animateur" }
+        { label: "Animation", path: "/animateur" },
+        { label: "Stats", path: "/stats" }
       );
     }
 
