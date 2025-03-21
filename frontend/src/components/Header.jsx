@@ -14,13 +14,13 @@ import AuthContext from "../context/AuthContext";
 
 // Styles avec une palette pastel et du contraste
 const GlassAppBar = styled(AppBar)({
-    background: "rgba(138, 170, 229, 0.9)", 
-    backdropFilter: "blur(12px)",
-    borderRadius: "12px",
-    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)",
-    padding: "8px 0",
-    margin: "10px",
-    width: "calc(100% - 20px)", // Ajouté pour compenser les marges
+  background: "rgba(138, 170, 229, 0.9)",
+  backdropFilter: "blur(12px)",
+  borderRadius: "12px",
+  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)",
+  padding: "8px 0",
+  margin: "10px",
+  width: "calc(100% - 20px)", // Ajouté pour compenser les marges
 });
 
 const StyledButton = styled(Button)({
@@ -38,6 +38,25 @@ const StyledButton = styled(Button)({
 const Header = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const getNavigationButtons = () => {
+    if (user?.role === "ADMINISTRATEUR") {
+      return (
+        <>
+          <StyledButton onClick={() => navigate("/admin")} sx={{ mr: 1 }}>
+            Tableau de bord
+          </StyledButton>
+          <StyledButton onClick={() => navigate("/don")} sx={{ mr: 1 }}>
+            Collecte
+          </StyledButton>
+          <StyledButton onClick={() => navigate("/animateur")} sx={{ mr: 1 }}>
+            Animation
+          </StyledButton>
+        </>
+      );
+    }
+    return null;
+  };
 
   return (
     <GlassAppBar position="static" elevation={0}>
@@ -57,15 +76,14 @@ const Header = () => {
         </Typography>
 
         <Box ml="auto" display="flex" alignItems="center" gap={2}>
+          {user && getNavigationButtons()}
           {user ? (
-            <>
-              <StyledButton
-                onClick={() => logout(navigate)}
-                startIcon={<Logout />}
-              >
-                Déconnexion
-              </StyledButton>
-            </>
+            <StyledButton
+              onClick={() => logout(navigate)}
+              startIcon={<Logout />}
+            >
+              Déconnexion
+            </StyledButton>
           ) : (
             <StyledButton
               onClick={() => navigate("/login")}
