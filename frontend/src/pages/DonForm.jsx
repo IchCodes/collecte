@@ -15,7 +15,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Paper
+  Paper,
 } from "@mui/material";
 import {
   createDon,
@@ -65,7 +65,6 @@ const DonForm = () => {
   const handleInputChange = (event, value) => {
     setInputValue(value); // Mettre à jour ce qui s'affiche immédiatement
 
-    
     const existingDonateur = donateurs.find(
       (d) => `${d.nom} ${d.prenom}`.toLowerCase() === value.toLowerCase()
     );
@@ -150,18 +149,18 @@ const DonForm = () => {
   return (
     <Container maxWidth="sm">
       <Box sx={{ mt: 4, mb: 4 }}>
-        <Paper 
-          elevation={3} 
-          sx={{ 
-            p: 4, 
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4,
             borderRadius: "12px",
             backgroundColor: backgroundColor,
-            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)"
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <Typography 
-            variant="h4" 
-            component="h2" 
+          <Typography
+            variant="h4"
+            component="h2"
             align="center"
             sx={{ color: primaryColor, fontWeight: "bold", mb: 3 }}
           >
@@ -181,35 +180,39 @@ const DonForm = () => {
                   <TextField {...params} label="Nom du Donateur" />
                 )}
               />
-              <TextField 
-                type="number" 
-                label="Montant" 
-                value={montant} 
-                onChange={(e) => setMontant(e.target.value)} 
-                required fullWidth
-                sx={{
-                  "& label.Mui-focused": { color: accentColor },
-                  "& .MuiOutlinedInput-root": {
-                    "&.Mui-focused fieldset": { borderColor: accentColor }
-                  }
-                }}
-              />
-              <TextField 
-                type="text" 
-                label="Message / Invocations" 
-                value={message} 
-                onChange={(e) => setMessage(e.target.value)} 
+              <TextField
+                type="number"
+                label="Montant"
+                value={montant}
+                onChange={(e) => setMontant(e.target.value)}
+                required
                 fullWidth
                 sx={{
                   "& label.Mui-focused": { color: accentColor },
                   "& .MuiOutlinedInput-root": {
-                    "&.Mui-focused fieldset": { borderColor: accentColor }
-                  }
+                    "&.Mui-focused fieldset": { borderColor: accentColor },
+                  },
+                }}
+              />
+              <TextField
+                type="text"
+                label="Message / Invocations"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                fullWidth
+                sx={{
+                  "& label.Mui-focused": { color: accentColor },
+                  "& .MuiOutlinedInput-root": {
+                    "&.Mui-focused fieldset": { borderColor: accentColor },
+                  },
                 }}
               />
               <FormControl fullWidth>
                 <InputLabel>Type de don</InputLabel>
-                <Select value={typeDon} onChange={(e) => setTypeDon(e.target.value)}>
+                <Select
+                  value={typeDon}
+                  onChange={(e) => setTypeDon(e.target.value)}
+                >
                   <MenuItem value="Unique">Unique</MenuItem>
                   <MenuItem value="Promesse">Promesse</MenuItem>
                   <MenuItem value="Récurrent">Récurrent</MenuItem>
@@ -218,7 +221,10 @@ const DonForm = () => {
 
               <FormControl fullWidth>
                 <InputLabel>Mode de paiement</InputLabel>
-                <Select value={modePaiement} onChange={(e) => setModePaiement(e.target.value)}>
+                <Select
+                  value={modePaiement}
+                  onChange={(e) => setModePaiement(e.target.value)}
+                >
                   <MenuItem value="CB">Carte Bancaire</MenuItem>
                   <MenuItem value="ESPECES">Espèces</MenuItem>
                   <MenuItem value="CHEQUE">Chèque</MenuItem>
@@ -228,30 +234,30 @@ const DonForm = () => {
 
               {(typeDon === "Promesse" || typeDon === "Récurrent") && (
                 <>
-                  <TextField 
-                    type="email" 
-                    label="Email *" 
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)} 
+                  <TextField
+                    type="email"
+                    label="Email *"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     fullWidth
                     sx={{
                       "& label.Mui-focused": { color: accentColor },
                       "& .MuiOutlinedInput-root": {
-                        "&.Mui-focused fieldset": { borderColor: accentColor }
-                      }
+                        "&.Mui-focused fieldset": { borderColor: accentColor },
+                      },
                     }}
                   />
-                  <TextField 
-                    type="tel" 
-                    label="Téléphone *" 
-                    value={telephone} 
-                    onChange={(e) => setTelephone(e.target.value)} 
+                  <TextField
+                    type="tel"
+                    label="Téléphone *"
+                    value={telephone}
+                    onChange={(e) => setTelephone(e.target.value)}
                     fullWidth
                     sx={{
                       "& label.Mui-focused": { color: accentColor },
                       "& .MuiOutlinedInput-root": {
-                        "&.Mui-focused fieldset": { borderColor: accentColor }
-                      }
+                        "&.Mui-focused fieldset": { borderColor: accentColor },
+                      },
                     }}
                   />
                 </>
@@ -260,11 +266,11 @@ const DonForm = () => {
               <Button
                 type="submit"
                 variant="contained"
-                sx={{ 
-                  backgroundColor: primaryColor, 
-                  color: "white", 
-                  '&:hover': { backgroundColor: "#8DC58F" },
-                  fontWeight: "bold"
+                sx={{
+                  backgroundColor: primaryColor,
+                  color: "white",
+                  "&:hover": { backgroundColor: "#8DC58F" },
+                  fontWeight: "bold",
                 }}
                 fullWidth
               >
@@ -274,6 +280,68 @@ const DonForm = () => {
           </form>
         </Paper>
       </Box>
+      {/* POPUP DE CRÉATION DU DONATEUR */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Créer un nouveau donateur</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Nom"
+            fullWidth
+            value={newDonateur.nom}
+            onChange={(e) =>
+              setNewDonateur({ ...newDonateur, nom: e.target.value })
+            }
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Prénom"
+            fullWidth
+            value={newDonateur.prenom}
+            onChange={(e) =>
+              setNewDonateur({ ...newDonateur, prenom: e.target.value })
+            }
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="email"
+            fullWidth
+            value={newDonateur.email}
+            onChange={(e) =>
+              setNewDonateur({ ...newDonateur, email: e.target.value })
+            }
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Téléphone"
+            fullWidth
+            value={newDonateur.telephone}
+            onChange={(e) =>
+              setNewDonateur({ ...newDonateur, telephone: e.target.value })
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)}>Annuler</Button>
+          <Button
+            onClick={() => {
+              if (newDonateur.nom && newDonateur.prenom) {
+                const newEntry = { ...newDonateur };
+
+                setSelectedDonateur(newEntry);
+                setDonateurs((prev) => [...prev, newEntry]); // Ajouter à la liste des donateurs visibles
+                setInputValue(`${newEntry.nom} ${newEntry.prenom}`); // Mettre immédiatement à jour l'affichage
+                setOpenDialog(false);
+              } else {
+                alert("Veuillez remplir au moins le nom et le prénom");
+              }
+            }}
+            variant="contained"
+            color="primary"
+          >
+            Valider
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
