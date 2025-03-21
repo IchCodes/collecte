@@ -280,10 +280,27 @@ const DonForm = () => {
           </form>
         </Paper>
       </Box>
-      {/* POPUP DE CRÉATION DU DONATEUR */}
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Créer un nouveau donateur</DialogTitle>
-        <DialogContent>
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: 4,
+            backgroundColor: "#FFF5E1", // Fond doux
+            padding: 2,
+            boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{ fontWeight: "bold", color: primaryColor, textAlign: "center" }}
+        >
+          ✨ Créer un nouveau donateur
+        </DialogTitle>
+
+        <DialogContent
+          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+        >
           <TextField
             label="Nom"
             fullWidth
@@ -291,7 +308,19 @@ const DonForm = () => {
             onChange={(e) =>
               setNewDonateur({ ...newDonateur, nom: e.target.value })
             }
-            sx={{ mb: 2 }}
+            sx={{
+              "& label.Mui-focused": { color: accentColor },
+              "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                borderColor: accentColor,
+              },
+              "& .MuiInputLabel-root": {
+                lineHeight: "1.2em",
+                marginTop: "4px",
+              },
+              "& .MuiInputLabel-shrink": {
+                transform: "translate(14px, -6px) scale(0.75)",
+              },
+            }}
           />
           <TextField
             label="Prénom"
@@ -300,16 +329,26 @@ const DonForm = () => {
             onChange={(e) =>
               setNewDonateur({ ...newDonateur, prenom: e.target.value })
             }
-            sx={{ mb: 2 }}
+            sx={{
+              "& label.Mui-focused": { color: accentColor },
+              "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                borderColor: accentColor,
+              },
+            }}
           />
           <TextField
-            label="email"
+            label="Email"
             fullWidth
             value={newDonateur.email}
             onChange={(e) =>
               setNewDonateur({ ...newDonateur, email: e.target.value })
             }
-            sx={{ mb: 2 }}
+            sx={{
+              "& label.Mui-focused": { color: accentColor },
+              "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                borderColor: accentColor,
+              },
+            }}
           />
           <TextField
             label="Téléphone"
@@ -318,25 +357,47 @@ const DonForm = () => {
             onChange={(e) =>
               setNewDonateur({ ...newDonateur, telephone: e.target.value })
             }
+            sx={{
+              "& label.Mui-focused": { color: accentColor },
+              "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                borderColor: accentColor,
+              },
+            }}
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>Annuler</Button>
+
+        <DialogActions sx={{ justifyContent: "space-between", px: 3, pb: 2 }}>
+          <Button
+            onClick={() => setOpenDialog(false)}
+            sx={{
+              textTransform: "none",
+              color: "#666",
+              fontWeight: "bold",
+              "&:hover": { backgroundColor: "#eee" },
+            }}
+          >
+            Annuler
+          </Button>
           <Button
             onClick={() => {
               if (newDonateur.nom && newDonateur.prenom) {
                 const newEntry = { ...newDonateur };
-
                 setSelectedDonateur(newEntry);
-                setDonateurs((prev) => [...prev, newEntry]); // Ajouter à la liste des donateurs visibles
-                setInputValue(`${newEntry.nom} ${newEntry.prenom}`); // Mettre immédiatement à jour l'affichage
+                setDonateurs((prev) => [...prev, newEntry]);
+                setInputValue(`${newEntry.nom} ${newEntry.prenom}`);
                 setOpenDialog(false);
               } else {
                 alert("Veuillez remplir au moins le nom et le prénom");
               }
             }}
             variant="contained"
-            color="primary"
+            sx={{
+              backgroundColor: primaryColor,
+              color: "white",
+              textTransform: "none",
+              fontWeight: "bold",
+              "&:hover": { backgroundColor: "#8DC58F" },
+            }}
           >
             Valider
           </Button>
