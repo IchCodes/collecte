@@ -16,11 +16,13 @@ import {
   DialogContent,
   DialogTitle,
   Paper,
+  Checkbox
 } from "@mui/material";
 import {
   createDon,
   createDonateur,
   getAllDonateurs,
+  updateDonateur,
 } from "../utils/GlobalApis";
 import { useNavigate } from "react-router-dom";
 
@@ -48,6 +50,8 @@ const DonForm = () => {
     telephone: "",
   });
   const [openDialog, setOpenDialog] = useState(false); // État du pop-up de création
+  const [douhaEnum, setDouhaEnum] = useState("");
+  const [anonyme, setAnonyme] = useState(false);
 
   const API_BASE_URL = "/api"; // Utilisation du proxy
 
@@ -119,8 +123,10 @@ const DonForm = () => {
         montant: parseFloat(montant),
         typeDon,
         modePaiement,
-        message: message,
+        message: "",
         donateurId: donateurId,
+        douhaEnum: douhaEnum,
+        anonyme: anonyme,
         userId: user.id,
         donateur: {
           nom: donateurInfo.nom,
@@ -132,6 +138,15 @@ const DonForm = () => {
       });
 
       alert("Don enregistré !");
+
+      await updateDonateur({
+        id: donateurId,
+        nom: donateurInfo.nom,
+        prenom: donateurInfo.prenom,
+        email: email.trim() !== "" ? email : donateurInfo.email,
+        telephone: telephone.trim() !== "" ? telephone : donateurInfo.telephone,
+      });
+
       // Réinitialisation des champs
       setMontant("");
       setTypeDon("Unique");
@@ -194,7 +209,7 @@ const DonForm = () => {
                   },
                 }}
               />
-              <TextField
+              {/* <TextField
                 type="text"
                 label="Message / Invocations"
                 value={message}
@@ -206,7 +221,7 @@ const DonForm = () => {
                     "&.Mui-focused fieldset": { borderColor: accentColor },
                   },
                 }}
-              />
+              /> */}
               <FormControl fullWidth>
                 <InputLabel>Type de don</InputLabel>
                 <Select
@@ -262,6 +277,34 @@ const DonForm = () => {
                   />
                 </>
               )}
+
+              <FormControl fullWidth>
+                <InputLabel>Type de douha</InputLabel>
+                <Select
+                  value={douhaEnum}
+                  onChange={(e) => setDouhaEnum(e.target.value)}
+                  required
+                >
+                  <MenuItem value="DECES">Décès</MenuItem>
+                  <MenuItem value="MALADIE">Maladie</MenuItem>
+                  <MenuItem value="SANTE">Santé</MenuItem>
+                  <MenuItem value="EPREUVE">Épreuve</MenuItem>
+                  <MenuItem value="GUIDANCE">Guidance</MenuItem>
+                  <MenuItem value="RIZQ">Rizq</MenuItem>
+                  <MenuItem value="ETUDE">Étude</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Checkbox
+                    checked={anonyme}
+                    onChange={(e) => setAnonyme(e.target.checked)}
+                    sx={{ "&.Mui-checked": { color: accentColor } }}
+                  />
+                  <Typography>Don anonyme</Typography>
+                </Box>
+              </FormControl>
 
               <Button
                 type="submit"
