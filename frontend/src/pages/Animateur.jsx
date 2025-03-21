@@ -11,6 +11,7 @@ import {
   ListItem,
   ListItemText
 } from "@mui/material";
+import Stats from "../components/Stats";
 
 // Palette de couleurs
 const primaryColor = "#8AAAE5"; // Bleu doux
@@ -58,6 +59,9 @@ const Animateur = () => {
 
   return (
     <Container maxWidth="md" sx={{ textAlign: "center", mt: 5 }}>
+
+        {/* <Stats /> */}
+
       <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold", color: primaryColor }}>
         🔊 Annonce des Dons
       </Typography>
