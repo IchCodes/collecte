@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -12,19 +12,50 @@ import {
   Legend,
 } from "recharts";
 import { Box, Typography, Paper, Grid } from "@mui/material";
-
-// Données simulées
-const totalDons = 100;
-const donsTraites = 43;
-const donsParType = [
-  { name: "Récurrents", value: 30 },
-  { name: "Promesses", value: 40 },
-  { name: "Uniques", value: 30 },
-];
-
-const COLORS = ["#A3D9A5", "#8AAAE5", "#F4A261"];
+import { getAllDons, donEnAttente } from "../utils/GlobalApis";
 
 const Stats = () => {
+  const COLORS = ["#A3D9A5", "#8AAAE5", "#F4A261"];
+  const [totalDons, setTotalDons] = useState(0);
+  const [donsEnAttente, setDonsEnAttente] = useState(0);
+  const [donsParType, setDonsParType] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const allDons = await getAllDons();
+      setTotalDons(allDons.length);
+
+      const typesCount = allDons.reduce((acc, don) => {
+        acc[don.typeDon] = (acc[don.typeDon] || 0) + 1;
+        return acc;
+      }, {});
+
+      const formattedDonsParType = Object.entries(typesCount).map(
+        ([name, value]) => ({
+          name,
+          value,
+        })
+      );
+      setDonsParType(formattedDonsParType);
+
+      const donsNonTraites = await donEnAttente();
+      setDonsEnAttente(donsNonTraites.length);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données", error);
+    }
+  };
+
+  useEffect(() => {
+    // Première récupération des données
+    fetchData();
+
+    // Mettre en place l'intervalle de 10 secondes
+    const interval = setInterval(fetchData, 10000);
+
+    // Nettoyer l'intervalle lors du démontage du composant
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Box sx={{ padding: 4 }}>
       <Typography
@@ -50,7 +81,7 @@ const Stats = () => {
               <BarChart
                 data={[
                   { name: "Total", value: totalDons },
-                  { name: "Traités", value: donsTraites },
+                  { name: "Traités", value: totalDons - donsEnAttente },
                 ]}
                 margin={{ top: 30 }}
               >

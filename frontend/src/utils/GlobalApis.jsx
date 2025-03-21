@@ -81,3 +81,14 @@ export async function updateDonateur(donateur) {
     console.error("Erreur de mise à jour du donateur", error);
   }
 }
+
+export async function donEnAttente() {
+  const url = `${import.meta.env.VITE_BASE_URl}/dons/en-attente`;
+  const config = { headers: { "X-API-KEY": "bismillah" } };
+  try {
+    const res = await axios.get(url, config);
+    return res.data;
+  } catch (error) {
+    console.error("Erreur de chargement des dons en attente", error);
+  }
+}
