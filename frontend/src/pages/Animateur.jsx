@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAllDons, updateStatuDon } from "../utils/GlobalApis";
+import { donEnAttente, getAllDons, updateStatuDon } from "../utils/GlobalApis";
 import {
   Container,
   Typography,
@@ -32,7 +32,7 @@ const Animateur = () => {
   const fetchDons = async () => {
     setLoading(true);
     try {
-      const data = await getAllDons();
+      const data = await donEnAttente();
 
       // Trier les dons du PLUS ANCIEN au PLUS RÉCENT
       const sortedDons = data.sort(
@@ -56,6 +56,7 @@ const Animateur = () => {
 
   // Fonction pour passer au don suivant
   const handleNextDon = () => {
+    console.log("Don suivant:", dons[currentIndex]);
     updateStatuDon(dons[currentIndex].id);
     if (currentIndex < dons.length - 1) {
       setCurrentIndex(currentIndex + 1);
@@ -67,8 +68,6 @@ const Animateur = () => {
 
   return (
     <Container maxWidth="md" sx={{ textAlign: "center", mt: 5 }}>
-      
-
       <Typography
         variant="h4"
         sx={{ mb: 3, fontWeight: "bold", color: primaryColor }}
@@ -93,7 +92,9 @@ const Animateur = () => {
           <Typography variant="h5" sx={{ color: accentColor }}>
             🎁 Don de{" "}
             <b>
-              {currentDon.donateur
+              {currentDon.anonyme
+                ? "Anonyme"
+                : currentDon.donateur
                 ? `${currentDon.donateur.nom} ${currentDon.donateur.prenom}`
                 : "Anonyme"}
             </b>
@@ -104,12 +105,12 @@ const Animateur = () => {
           >
             {currentDon.montant} €
           </Typography>
-          {currentDon.message && (
+          {currentDon.douhaEnum && (
             <Typography
               variant="h6"
               sx={{ mt: 2, fontStyle: "italic", color: messageColor }}
             >
-              ✨ "{currentDon.message}"
+              ✨ "Invocation pour {currentDon.douhaEnum}"
             </Typography>
           )}
         </Paper>
@@ -153,15 +154,19 @@ const Animateur = () => {
                       <Typography
                         sx={{ fontWeight: "bold", color: primaryColor }}
                       >
-                        {don.donateur ? don.donateur.nom : "Anonyme"} -{" "}
-                        {don.montant} €
+                        {don.anonyme
+                          ? "Anonyme"
+                          : don.donateur
+                          ? don.donateur.nom
+                          : "Anonyme"}{" "}
+                        - {don.montant} €
                       </Typography>
                     }
                     secondary={
-                      don.message ? (
+                      don.douhaEnum ? (
                         <Typography sx={{ color: messageColor }}>
                           {" "}
-                          "{don.message}"{" "}
+                          "{don.douhaEnum}"{" "}
                         </Typography>
                       ) : (
                         ""
