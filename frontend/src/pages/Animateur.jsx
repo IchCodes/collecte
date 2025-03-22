@@ -27,7 +27,7 @@ const Animateur = () => {
   const [loading, setLoading] = useState(false);
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md")); // Affiche à partir de "md" (>= 960px)
-    const [totalMontant, setTotalMontant] = useState(0);
+  const [totalMontant, setTotalMontant] = useState(0);
 
   // Fonction pour récupérer et trier les dons
   const fetchDons = async () => {
@@ -42,9 +42,8 @@ const Animateur = () => {
       );
 
       setDons(sortedDons);
-        const total = sortedDons.reduce((acc, don) => acc + don.montant, 0);
-        setTotalMontant(total);
-
+      const total = sortedDons.reduce((acc, don) => acc + don.montant, 0);
+      setTotalMontant(total);
     } catch (error) {
       console.error("Erreur lors de la récupération des dons:", error);
     }
@@ -78,9 +77,9 @@ const Animateur = () => {
       >
         🔊 Annonce des Dons
       </Typography>
-        <Typography variant="h6" sx={{ color: successColor, mb: 2 }}>
-            💰 Total : <b>{totalMontant} €</b>
-        </Typography>
+      <Typography variant="h6" sx={{ color: successColor, mb: 2 }}>
+        💰 Total : <b>{totalMontant} €</b>
+      </Typography>
 
       {/* Affichage du don en grand */}
       {loading ? (
@@ -117,7 +116,11 @@ const Animateur = () => {
               variant="h6"
               sx={{ mt: 2, fontStyle: "italic", color: messageColor }}
             >
-              ✨ "Invocation pour {currentDon.douhaEnum}"
+              ✨ "Invocation pour{" "}
+              {currentDon.douhaEnum === "AUTRE"
+                ? currentDon.message
+                : currentDon.douhaEnum}
+              "
             </Typography>
           )}
         </Paper>
@@ -152,36 +155,34 @@ const Animateur = () => {
             📢 Prochains Dons :
           </Typography>
           <List sx={{ backgroundColor: "#F8F9FA", borderRadius: "8px", p: 2 }}>
-            {dons
-              .slice(currentIndex + 1)
-              .map((don, index) => (
-                <ListItem key={don.id} divider>
-                  <ListItemText
-                    primary={
-                      <Typography
-                        sx={{ fontWeight: "bold", color: primaryColor }}
-                      >
-                        {don.anonyme
-                          ? "Anonyme"
-                          : don.donateur
-                          ? don.donateur.nom
-                          : "Anonyme"}{" "}
-                        - {don.montant} €
+            {dons.slice(currentIndex + 1).map((don, index) => (
+              <ListItem key={don.id} divider>
+                <ListItemText
+                  primary={
+                    <Typography
+                      sx={{ fontWeight: "bold", color: primaryColor }}
+                    >
+                      {don.anonyme
+                        ? "Anonyme"
+                        : don.donateur
+                        ? don.donateur.nom
+                        : "Anonyme"}{" "}
+                      - {don.montant} €
+                    </Typography>
+                  }
+                  secondary={
+                    don.douhaEnum ? (
+                      <Typography sx={{ color: messageColor }}>
+                        {" "}
+                        "{don.douhaEnum}"{" "}
                       </Typography>
-                    }
-                    secondary={
-                      don.douhaEnum ? (
-                        <Typography sx={{ color: messageColor }}>
-                          {" "}
-                          "{don.douhaEnum}"{" "}
-                        </Typography>
-                      ) : (
-                        ""
-                      )
-                    }
-                  />
-                </ListItem>
-              ))}
+                    ) : (
+                      ""
+                    )
+                  }
+                />
+              </ListItem>
+            ))}
           </List>
         </Box>
       )}
