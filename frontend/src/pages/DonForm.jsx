@@ -16,7 +16,7 @@ import {
   DialogContent,
   DialogTitle,
   Paper,
-  Checkbox
+  Checkbox,
 } from "@mui/material";
 import {
   createDon,
@@ -87,7 +87,7 @@ const DonForm = () => {
     } else {
       setSelectedDonateur(null);
       setNewDonateur({ nom: value, prenom: "", email: "", telephone: "" });
-      if (value.trim().length > 2) {
+      if (value.trim().length > 5) {
         setOpenDialog(true);
       }
     }
@@ -131,9 +131,8 @@ const DonForm = () => {
         donateur: {
           nom: donateurInfo.nom,
           prenom: donateurInfo.prenom,
-          email: email.trim() !== "" ? email : donateurInfo.email,
-          telephone:
-            telephone.trim() !== "" ? telephone : donateurInfo.telephone,
+          email: email ? email.trim() : donateurInfo.email,
+          telephone: telephone ? telephone.trim() : donateurInfo.telephone,
         },
       });
 
@@ -143,8 +142,8 @@ const DonForm = () => {
         id: donateurId,
         nom: donateurInfo.nom,
         prenom: donateurInfo.prenom,
-        email: email.trim() !== "" ? email : donateurInfo.email,
-        telephone: telephone.trim() !== "" ? telephone : donateurInfo.telephone,
+        email: email ? email.trim() : donateurInfo.email,
+        telephone: telephone ? telephone.trim() : donateurInfo.telephone,
       });
 
       // Réinitialisation des champs
