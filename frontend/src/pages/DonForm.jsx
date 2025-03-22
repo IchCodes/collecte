@@ -123,7 +123,7 @@ const DonForm = () => {
         montant: parseFloat(montant),
         typeDon,
         modePaiement,
-        message: "",
+        message: message || "",
         donateurId: donateurId,
         douhaEnum: douhaEnum,
         anonyme: anonyme,
