@@ -19,7 +19,7 @@ import { useTheme } from "@mui/material/styles";
 const primaryColor = "#8AAAE5"; // Bleu doux
 const accentColor = "#F4A261"; // Orange pastel
 const successColor = "#A3D9A5"; // Vert clair
-const messageColor = "#B388EB"; // Violet doux
+const messageColor = "#B388EB"; // Violet dou
 
 const Animateur = () => {
   const [dons, setDons] = useState([]); // Liste complète des dons
@@ -27,6 +27,7 @@ const Animateur = () => {
   const [loading, setLoading] = useState(false);
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md")); // Affiche à partir de "md" (>= 960px)
+    const [totalMontant, setTotalMontant] = useState(0);
 
   // Fonction pour récupérer et trier les dons
   const fetchDons = async () => {
@@ -41,6 +42,9 @@ const Animateur = () => {
       );
 
       setDons(sortedDons);
+        const total = sortedDons.reduce((acc, don) => acc + don.montant, 0);
+        setTotalMontant(total);
+
     } catch (error) {
       console.error("Erreur lors de la récupération des dons:", error);
     }
@@ -74,6 +78,9 @@ const Animateur = () => {
       >
         🔊 Annonce des Dons
       </Typography>
+        <Typography variant="h6" sx={{ color: successColor, mb: 2 }}>
+            💰 Total : <b>{totalMontant} €</b>
+        </Typography>
 
       {/* Affichage du don en grand */}
       {loading ? (
@@ -146,7 +153,7 @@ const Animateur = () => {
           </Typography>
           <List sx={{ backgroundColor: "#F8F9FA", borderRadius: "8px", p: 2 }}>
             {dons
-              .slice(currentIndex + 1, currentIndex + 4)
+              .slice(currentIndex + 1)
               .map((don, index) => (
                 <ListItem key={don.id} divider>
                   <ListItemText

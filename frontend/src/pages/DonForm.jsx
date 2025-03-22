@@ -146,6 +146,13 @@ const DonForm = () => {
         telephone: telephone ? telephone.trim() : donateurInfo.telephone,
       });
 
+      const handleDouhaChange = (e) => {
+        const value = e.target.value;
+        setDouhaEnum(value);
+        if (value !== "AUTRE") {
+          setMessage(""); // on nettoie le message si ce n'est pas une douha libre
+        }
+      };
       // Réinitialisation des champs
       setMontant("");
       setTypeDon("Unique");
@@ -281,9 +288,15 @@ const DonForm = () => {
                 <InputLabel>Type de douha</InputLabel>
                 <Select
                   value={douhaEnum}
-                  onChange={(e) => setDouhaEnum(e.target.value)}
-                  required
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setDouhaEnum(value === "" ? null : value);
+                    if (value !== "AUTRE") {
+                      setMessage(null);
+                    }
+                  }}
                 >
+                  <MenuItem value="">Aucun</MenuItem>
                   <MenuItem value="DECES">Décès</MenuItem>
                   <MenuItem value="MALADIE">Maladie</MenuItem>
                   <MenuItem value="SANTE">Santé</MenuItem>
@@ -291,8 +304,23 @@ const DonForm = () => {
                   <MenuItem value="GUIDANCE">Guidance</MenuItem>
                   <MenuItem value="RIZQ">Rizq</MenuItem>
                   <MenuItem value="ETUDE">Étude</MenuItem>
+                  <MenuItem value="AUTRE">Autre</MenuItem>
                 </Select>
               </FormControl>
+              {douhaEnum === "AUTRE" && (
+                  <TextField
+                      label="Écris ta douha"
+                      fullWidth
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      sx={{
+                        "& label.Mui-focused": { color: accentColor },
+                        "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                          borderColor: accentColor,
+                        },
+                      }}
+                  />
+              )}
 
               <FormControl fullWidth>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
