@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAllDons } from "../utils/GlobalApis";
+import { getAllDons, updateStatuDon } from "../utils/GlobalApis";
 import {
   Container,
   Typography,
@@ -56,6 +56,7 @@ const Animateur = () => {
 
   // Fonction pour passer au don suivant
   const handleNextDon = () => {
+    updateStatuDon(dons[currentIndex].id);
     if (currentIndex < dons.length - 1) {
       setCurrentIndex(currentIndex + 1);
     }
@@ -66,11 +67,7 @@ const Animateur = () => {
 
   return (
     <Container maxWidth="md" sx={{ textAlign: "center", mt: 5 }}>
-      {isDesktop && (
-        <Box sx={{ mb: 4 }}>
-          <Stats />
-        </Box>
-      )}
+      
 
       <Typography
         variant="h4"

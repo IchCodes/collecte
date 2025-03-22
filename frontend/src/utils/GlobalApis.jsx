@@ -92,3 +92,15 @@ export async function donEnAttente() {
     console.error("Erreur de chargement des dons en attente", error);
   }
 }
+
+export async function updateStatuDon(donId){
+    const url = `${import.meta.env.VITE_BASE_URl}/dons/${donId}/affiche`;
+    const config = { headers: { "X-API-KEY": "bismillah" } };
+
+    try {
+        const res = await axios.put(url, {}, config);
+        return res.data;
+    } catch (error) {
+        console.error("Erreur de mise à jour du statut du don", error);
+    }
+}
