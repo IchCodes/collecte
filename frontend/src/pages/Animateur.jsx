@@ -33,16 +33,18 @@ const Animateur = () => {
   const fetchDons = async () => {
     setLoading(true);
     try {
-      const data = await donEnAttente();
+      const donsEnAttente = await donEnAttente();
+      const tousDons = await getAllDons(); // Récupérer tous les dons
 
-      // Trier les dons du PLUS ANCIEN au PLUS RÉCENT
-      const sortedDons = data.sort(
+      // Trier les dons en attente du PLUS ANCIEN au PLUS RÉCENT
+      const sortedDons = donsEnAttente.sort(
         (a, b) =>
           new Date(a.dateHeureAffichage) - new Date(b.dateHeureAffichage)
       );
 
       setDons(sortedDons);
-      const total = sortedDons.reduce((acc, don) => acc + don.montant, 0);
+      // Calculer le total de tous les dons
+      const total = tousDons.reduce((acc, don) => acc + don.montant, 0);
       setTotalMontant(total);
     } catch (error) {
       console.error("Erreur lors de la récupération des dons:", error);
@@ -77,7 +79,7 @@ const Animateur = () => {
       >
         🔊 Annonce des Dons
       </Typography>
-      <Typography variant="h6" sx={{ color: successColor, mb: 2 }}>
+      <Typography variant="h1" sx={{ color: successColor, mb: 2 }}>
         💰 Total : <b>{totalMontant} €</b>
       </Typography>
 
